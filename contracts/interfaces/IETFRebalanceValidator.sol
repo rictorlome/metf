@@ -27,14 +27,14 @@ interface IETFRebalanceValidator {
 
     /// @notice IETF will call this method on every rebalance prior to releasing funds to the `rebalancer`.
     /// @dev `validateRebalance` can revert or return False on failure, but it MUST return True on success.
-    /// @param invoker The address which invoked `rebalance` on the ETF. 
+    /// @param initiator The address which invoked `rebalance` on the ETF. 
     /// @param rebalancer The address designated as the `rebalancer` on the call to `rebalance` on the ETF.
     /// @param newTokens The tokens component of the proposed new allocation.
     /// @param newAmounts The amounts component of the proposed new allocation.
     /// @param data The `data` passed in as `data` on the call to `rebalance` on the ETF.
     /// @return success Flag indicating whether the operation succeeded.
     function validateRebalance(
-        address invoker,
+        address initiator,
         IETFRebalancer rebalancer,
         IERC20[] calldata newTokens,
         uint256[] calldata newAmounts,

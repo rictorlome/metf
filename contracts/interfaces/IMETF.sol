@@ -4,11 +4,11 @@ pragma solidity ^0.8.0;
 
 import "./ERC/IERC20.sol";
 
-/// @title IETFRebalancer
+/// @title IMETF
 /// @author _
 /// @notice Calls to IETF.rebalance must specify an IETFRebalancer capable of handling the rebalance.
 /// The IETF does not need to trust the rebalancer, but the Rebalancer needs to trust the IETF.
-interface IETFRebalancer {
+interface IMETF {
     /// @notice The IETF will transfer its entire holdings to the IETFRebalancer before calling `onRebalance`.
     /// This is a batchFlashLoan for `lendAmounts` of `lendTokens`, which must be repayed with `repayAmounts` of `repayTokens`.
     /// @dev `lendAmounts` and `repayAmounts` are calculated in the `rebalance` method as `totalSupply()` units
