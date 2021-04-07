@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import "../interfaces/erc/IERC20.sol";
+import '../interfaces/erc/IERC20.sol';
 
 contract ERC20 is IERC20 {
     mapping(address => uint256) public override balanceOf;
@@ -18,20 +18,12 @@ contract ERC20 is IERC20 {
         symbol = symbol_;
     }
 
-    function approve(address spender, uint256 amount)
-        external
-        override
-        returns (bool)
-    {
+    function approve(address spender, uint256 amount) external override returns (bool) {
         _approve(msg.sender, spender, amount);
         return true;
     }
 
-    function transfer(address recipient, uint256 amount)
-        external
-        override
-        returns (bool)
-    {
+    function transfer(address recipient, uint256 amount) external override returns (bool) {
         _transfer(msg.sender, recipient, amount);
         return true;
     }

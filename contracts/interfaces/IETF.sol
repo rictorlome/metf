@@ -3,12 +3,12 @@
 
 pragma solidity ^0.8.0;
 
-import "./erc/IERC20.sol";
-import "./erc/IERC2612.sol";
-import "./erc/IERC3156FlashLender.sol";
+import './erc/IERC20.sol';
+import './erc/IERC2612.sol';
+import './erc/IERC3156FlashLender.sol';
 
-import "./IETFRebalancer.sol";
-import "./IETFRebalanceValidator.sol";
+import './IETFRebalancer.sol';
+import './IETFRebalanceValidator.sol';
 
 /// @title IETF
 /// @author _
@@ -76,9 +76,7 @@ interface IETF is IERC20, IERC2612, IERC3156FlashLender {
     /// @param to The recipient of the created tokens.
     /// @param value The number of tokens to create.
     /// @return success Flag indicating whether the operation succeeded.
-    function createTo(address to, uint256 value)
-        external
-        returns (bool success);
+    function createTo(address to, uint256 value) external returns (bool success);
 
     /// @notice Redeem `value` ETF from caller account for `value` units of underlying allocation to the same.
     /// @dev Emits {Transfer} event to reflect ETF burn of `value` to `address(0)` from caller account.
@@ -96,9 +94,7 @@ interface IETF is IERC20, IERC2612, IERC3156FlashLender {
     /// @param to is the recipient of the redeemed underlying tokens.
     /// @param value is the number of tokens to redeem.
     /// @return success Flag indicating whether the operation succeeded.
-    function redeemTo(address to, uint256 value)
-        external
-        returns (bool success);
+    function redeemTo(address to, uint256 value) external returns (bool success);
 
     /// @notice Redeem `value` ETF from account (`from`) for `value` units of underlying allocation to account (`to`).
     /// @dev Emits {Approval} event to reflect reduced allowance `value` for caller account to spend from account (`from`),
@@ -124,9 +120,9 @@ interface IETF is IERC20, IERC2612, IERC3156FlashLender {
     /// Repayment of the loan will be `supply()` units of the new underlying allocation.
     /// @dev Emits {Rebalance} event to reflect change from previous allocation to new allocation.
     /// Requirements:
-    ///     - The ETF `validator()` must return `true` for `IETFRebalanceValidator.validateRebalance(rebalancer, newTokens, newAmounts, bytes)`
+    ///     - The ETF `validator()` must return `true` for `validateRebalance(rebalancer, newTokens, newAmounts, bytes)`
     ///     - `newTokens` and `newAmounts` must be a statically valid allocation (equal lengths, tokens sorted, no repeats, no recursive ETFs, etc.)
-    ///     - The `rebalancer` must return true from `IETFRebalancer.onRebalance(msg.sender, newTokens, newAmounts, data)`
+    ///     - The `rebalancer` must return true from `rebalancer.onRebalance(msg.sender, newTokens, newAmounts, data)`
     ///     - The `rebalancer` must allow the ETF to transfer `supply()` units of the new underlying allocation.
     /// @param rebalancer The recipient of the batchFlashLoan-like operation and provider of `supply()` units of the new allocation.
     /// @param newTokens The new tokens component of the the underlying allocation.
