@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.0;
 
-import "./ERC/IERC20.sol"
+import "./erc/IERC20.sol";
 
-import "./IETF.sol"
-import "./IETFRebalancer.sol"
+import "./IETF.sol";
+import "./IETFRebalancer.sol";
 
 /// @title IETFRebalanceValidator
 /// @author _
@@ -27,7 +27,7 @@ interface IETFRebalanceValidator {
 
     /// @notice IETF will call this method on every rebalance prior to releasing funds to the `rebalancer`.
     /// @dev `validateRebalance` can revert or return False on failure, but it MUST return True on success.
-    /// @param initiator The address which invoked `rebalance` on the ETF. 
+    /// @param initiator The address which invoked `rebalance` on the ETF.
     /// @param rebalancer The address designated as the `rebalancer` on the call to `rebalance` on the ETF.
     /// @param newTokens The tokens component of the proposed new allocation.
     /// @param newAmounts The amounts component of the proposed new allocation.

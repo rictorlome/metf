@@ -3,10 +3,9 @@
 
 pragma solidity ^0.8.0;
 
-import "./ERC/IERC20.sol";
-import "./ERC/IERC2612.sol";
-import "./ERC/IERC3156FlashLender.sol";
-import "./ERC/IERC3234BatchFlashLender.sol";
+import "./erc/IERC20.sol";
+import "./erc/IERC2612.sol";
+import "./erc/IERC3156FlashLender.sol";
 
 import "./IETFRebalancer.sol";
 import "./IETFRebalanceValidator.sol";
@@ -15,17 +14,28 @@ import "./IETFRebalanceValidator.sol";
 /// @author _
 /// @notice IETF (Interface for an ERC-20 Tokenized Fund) is a non-custodial, rebalancing fund of ERC-20 tokens.
 /// It is itself an ERC-20 compatible token with `IERC3156FlashLender` flashMinting capabilities.
-//  In addition, it is an `IERC3234BatchFlashLender` of the underlying ERC-20 tokens.
-/// Anyone can mint new ETF tokens by depositing the correct allocation of underlying tokens.
-/// Anyone can redeem their ETF tokens for the underlying tokens.
+/// Anyone can mint new ETF tokens by depositing some multiple of the underlying allocation.
+/// Anyone can redeem their ETF tokens for equivalent units of the underlying allocation.
 /// Anyone can rebalance the ETF, via a batchFlashLoan-like operation, provided certain conditions are met.
-/// For the rebalance to succeed, the new allocation must be approved by the IETFRebalanceValidator, set at ETF creation.
-interface IETF is
-    IERC20,
-    IERC2612,
-    IERC3156FlashLender,
-    IERC3234BatchFlashLender
-{
+/// Primarily, for the rebalance to succeed, the new allocation must be approved by the IETFRebalanceValidator,
+/// which is permanently set at the time of ETF creation.
+interface IETF is IERC20, IERC2612, IERC3156FlashLender {
+    /// @notice Emitted when the ETF is successfully rebalanced
+    /// @param initiator The address which initiated the rebalance call
+    /// @param rebalancer The address which handled the swapping of the underlying tokens
+    /// @param prevTokens The token component of the allocation prior to the rebalance
+    /// @param prevAmounts The amount component of the allocation prior to the rebalance
+    /// @param newTokens The token component of the allocation after the rebalance
+    /// @param newAmounts The amount component of the allocation after the rebalance
+    event ETFRebalanced(
+        address indexed initiator,
+        IETFRebalancer indexed rebalancer,
+        IERC20[] prevTokens,
+        uint256[] prevAmounts,
+        IERC20[] newTokens,
+        uint256[] newAmounts
+    );
+
     /// @notice Returns the address which created this ETF.
     /// @dev This value is immutable, assigned at ETF creation.
     /// @return The address which created this ETF.
@@ -41,18 +51,14 @@ interface IETF is
     /// The length of `tokens()` must match the length of `amounts()`
     /// The returned values are sorted.
     /// @return The current set of tokens in the allocation.
-    function tokens() external view returns (IERC20[] calldata);
+    function tokens() external view returns (IERC20[] memory);
 
     /// @notice Returns the current amounts in the allocation.
     /// `amounts()` and `tokens()` together specify the ETF allocation at any given time.
     /// @dev These are specified in terms of the underlying token's native scale.
     /// This value may change when the ETF is rebalanced.
     /// @return The current amounts of each token in the allocation.
-    function amounts() external view returns (uint256[] calldata);
-
-    /// @notice Returns current amount of flash-minted ETF token.
-    /// @return The current amount of flash-minted ETF token.
-    function flashMinted() external view returns (uint256);
+    function amounts() external view returns (uint256[] memory);
 
     /// @notice Depositing `value` units of the underlying allocation, grants caller `value` ETF tokens.
     /// @dev Emits {Transfer} event to reflect mint of `value` from `address(0)` to caller account.
