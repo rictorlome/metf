@@ -39,10 +39,10 @@ contract ETF is IETF, ERC3156FlashLender {
         uint256[] memory initAmounts,
         IETFRebalanceValidator _validator
     ) ERC3156FlashLender(_name, _symbol) {
-        require(_validator.validateLaunch(msg.sender, initTokens, initAmounts), 'ETF launch failed.');
         _setAllocation(initTokens, initAmounts);
         validator = _validator;
         launcher = msg.sender;
+        require(_validator.validateLaunch(msg.sender, initTokens, initAmounts), 'ETF launch failed.');
     }
 
     function tokens() external view override returns (IERC20[] memory) {
@@ -54,14 +54,14 @@ contract ETF is IETF, ERC3156FlashLender {
     }
 
     function create(uint256 value) external override returns (bool success) {
-        _transferUnderlyingAllocationFrom(msg.sender, address(this), value);
         _mint(msg.sender, value);
+        _transferUnderlyingAllocationFrom(msg.sender, address(this), value);
         success = true;
     }
 
     function createTo(address to, uint256 value) external override returns (bool success) {
-        _transferUnderlyingAllocationFrom(msg.sender, address(this), value);
         _mint(to, value);
+        _transferUnderlyingAllocationFrom(msg.sender, address(this), value);
         success = true;
     }
 
@@ -99,15 +99,17 @@ contract ETF is IETF, ERC3156FlashLender {
         uint256 units = totalSupply;
         IERC20[] memory prevTokens = _tokens;
         uint256[] memory prevAmounts = _amounts;
+        _setAllocation(newTokens, newAmounts);
+        emit ETFRebalanced(msg.sender, rebalancer, prevTokens, prevAmounts, newTokens, newAmounts);
         require(validator.validateRebalance(msg.sender, rebalancer, newTokens, newAmounts, data), 'Invalid rebalance.');
-        _transferUnderlyingAllocationFrom(address(this), address(rebalancer), units);
+        for (uint256 i = 0; i < prevTokens.length; i++) {
+            _safeTransferFrom(prevTokens[i], address(this), address(rebalancer), prevAmounts[i] * units);
+        }
         require(
             rebalancer.onRebalance(msg.sender, units, prevTokens, prevAmounts, newTokens, newAmounts, data),
             'Rebalance failed.'
         );
-        _setAllocation(newTokens, newAmounts);
         _transferUnderlyingAllocationFrom(address(rebalancer), address(this), units);
-        emit ETFRebalanced(msg.sender, rebalancer, prevTokens, prevAmounts, newTokens, newAmounts);
         success = true;
     }
 
@@ -116,8 +118,8 @@ contract ETF is IETF, ERC3156FlashLender {
         uint256 value,
         bytes calldata data
     ) external override returns (bool success) {
-        _transferUnderlyingAllocationFrom(msg.sender, address(this), value);
         _mint(to, value);
+        _transferUnderlyingAllocationFrom(msg.sender, address(this), value);
         return ITransferReceiver(to).onTokenTransfer(msg.sender, value, data);
     }
 

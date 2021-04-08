@@ -21,7 +21,7 @@ abstract contract ERC2612 is ERC20, IERC2612 {
         bytes32 r,
         bytes32 s
     ) external override {
-        require(deadline >= block.timestamp, 'ERC2612: EXPIRED');
+        require(block.timestamp <= deadline, 'Expired');
         bytes32 digest =
             keccak256(
                 abi.encodePacked(
@@ -31,7 +31,7 @@ abstract contract ERC2612 is ERC20, IERC2612 {
                 )
             );
         address recoveredAddress = ecrecover(digest, v, r, s);
-        require(recoveredAddress != address(0) && recoveredAddress == owner, 'ERC2612: INVALID_SIGNATURE');
+        require(recoveredAddress != address(0) && recoveredAddress == owner, 'Invalid signature');
         _approve(owner, spender, value);
     }
 

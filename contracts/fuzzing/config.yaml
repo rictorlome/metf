@@ -1,0 +1,4 @@
+seqLen: 50
+testLimit: 20000
+coverage: true
+checkAsserts: true
