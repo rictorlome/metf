@@ -2,3 +2,4 @@ seqLen: 50
 testLimit: 20000
 coverage: true
 checkAsserts: true
+deployer: '0x00a329c0648769a73afac7f9381e08fb43dbea70'
