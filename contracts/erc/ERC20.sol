@@ -47,8 +47,8 @@ contract ERC20 is IERC20 {
     }
 
     function _burn(address from, uint256 value) internal {
-        balanceOf[from] -= value;
         totalSupply -= value;
+        balanceOf[from] -= value;
         emit Transfer(from, address(0), value);
     }
 
@@ -66,6 +66,8 @@ contract ERC20 is IERC20 {
         address recipient,
         uint256 amount
     ) internal {
+        require(recipient != address(0), 'Call burn instead.');
+        require(recipient != address(this), 'Call burn instead.');
         balanceOf[sender] -= amount;
         balanceOf[recipient] += amount;
         emit Transfer(sender, recipient, amount);

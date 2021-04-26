@@ -42,7 +42,8 @@ abstract contract ERC2612 is ERC20, IERC2612 {
                     keccak256('EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)'),
                     keccak256(bytes(name)),
                     keccak256(bytes('1')),
-                    block.chainid,
+                    // block.chainid,
+                    1,
                     address(this)
                 )
             );

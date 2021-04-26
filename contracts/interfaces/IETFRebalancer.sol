@@ -20,10 +20,10 @@ interface IETFRebalancer {
     /// @param units The amount of underlying allocation which is being lent and which must be repaid.
     /// @param lendTokens The tokens component of the allocation being lent to the IETFRebalancer.
     /// @param lendAmounts The amounts component of the allocation being lent being lent to the IETFRebalancer.
-    /// EXAMPLE: if lendTokens[1] == DAI && lendAmounts == 10 && supply == 2, then 20 DAI is lent to the rebalancer.
+    /// EXAMPLE: if lendTokens[1] == DAI && lendAmounts == 10 && units == 2, then 20 DAI is lent to the rebalancer.
     /// @param repayTokens The tokens component of the allocation which must be repayed to the IETF.
     /// @param repayAmounts The amounts of each of the `repayTokens` which must be repayed to the IETF.
-    /// EXAMPLE: if repayTokens[1] == DAI && repayAmounts == 5 && supply == 2, then 10 DAI must be repaid to the ETF.
+    /// EXAMPLE: if repayTokens[1] == DAI && repayAmounts == 5 && units == 2, then 10 DAI must be repaid to the ETF.
     /// @param data The `data` passed in as `data` on the call to `rebalance` on the IETF.
     /// @return success Flag indicating whether the operation succeeded.
     function onRebalance(
