@@ -10,7 +10,7 @@ import '../interfaces/erc/IERC3156FlashLender.sol';
 abstract contract ERC3156FlashLender is ERC2612, IERC3156FlashLender {
     constructor(string memory name_, string memory symbol_) ERC2612(name_, symbol_) {}
 
-    bytes32 private immutable CB_SUCCESS = keccak256('ERC3156FlashBorrower.onFlashLoan');
+    bytes32 private constant CB_SUCCESS = keccak256('ERC3156FlashBorrower.onFlashLoan');
 
     function maxFlashLoan(address token) external view override returns (uint256) {
         return token == address(this) ? type(uint256).max - totalSupply : 0;
